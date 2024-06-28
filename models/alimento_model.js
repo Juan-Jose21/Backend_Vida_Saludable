@@ -1,11 +1,10 @@
 const db = require('../config/config');
 
-const RegistroAlimentacion = {};
+const Alimentacion = {};
 
-RegistroAlimentacion.create = (datosAlimentacion, callback) => {
+Alimentacion.create = (datosAlimentacion, callback) => {
   const { fecha, hora, tipo_alimento, saludable, user_id } = datosAlimentacion;
   
-  // Verificar que todos los datos necesarios estén presentes
   if (!fecha || !hora || !tipo_alimento || !saludable || !user_id) {
     return callback('Todos los campos son requeridos', null);
   }
@@ -23,4 +22,48 @@ RegistroAlimentacion.create = (datosAlimentacion, callback) => {
   );
 };
 
-module.exports = RegistroAlimentacion;
+Alimentacion.mostrarEstadisticas = (user_id, callback) => {
+  const sql = `
+    SELECT 
+      SUM(CASE WHEN saludable = 'si' THEN 1 ELSE 0 END) + SUM(CASE WHEN saludable = 'no' THEN 1 ELSE 0 END) AS total_alimentos,
+      ROUND(SUM(CASE WHEN saludable = 'si' THEN 1 ELSE 0 END) * 100.0 / (SUM(CASE WHEN saludable = 'si' THEN 1 ELSE 0 END) + SUM(CASE WHEN saludable = 'no' THEN 1 ELSE 0 END))) AS si_saludables,
+      ROUND(SUM(CASE WHEN saludable = 'no' THEN 1 ELSE 0 END) * 100.0 / (SUM(CASE WHEN saludable = 'si' THEN 1 ELSE 0 END) + SUM(CASE WHEN saludable = 'no' THEN 1 ELSE 0 END))) AS no_saludables
+    FROM 
+      alimentacion
+    WHERE 
+      user_id = ?;
+  `;
+
+  db.query(sql, [user_id], (err, data) => {
+    if (err) {
+      callback(err, null);
+    } else {
+      callback(null, data);
+    }
+  });
+};
+
+Alimentacion.mostrarEstadisticasTipo = (user_id, tipo_alimento, callback) => {
+  const sql = `
+    SELECT 
+      SUM(CASE WHEN saludable = 'si' THEN 1 ELSE 0 END) + SUM(CASE WHEN saludable = 'no' THEN 1 ELSE 0 END) AS total_alimentos,
+      ROUND(SUM(CASE WHEN saludable = 'si' THEN 1 ELSE 0 END) * 100.0 / (SUM(CASE WHEN saludable = 'si' THEN 1 ELSE 0 END) + SUM(CASE WHEN saludable = 'no' THEN 1 ELSE 0 END))) AS si_saludables,
+      ROUND(SUM(CASE WHEN saludable = 'no' THEN 1 ELSE 0 END) * 100.0 / (SUM(CASE WHEN saludable = 'si' THEN 1 ELSE 0 END) + SUM(CASE WHEN saludable = 'no' THEN 1 ELSE 0 END))) AS no_saludables
+    FROM 
+      alimentacion
+    WHERE 
+      user_id = ? AND
+      tipo_alimento = ?;
+  `;
+
+  db.query(sql, [user_id, tipo_alimento], (err, data) => {
+    if (err) {
+      callback(err, null);
+    } else {
+      callback(null, data);
+    }
+  });
+};
+
+
+module.exports = Alimentacion;

@@ -48,7 +48,7 @@ module.exports = {
                 return res.status(201).json({
                     success: true,
                     message: 'El Usuario fue autenticado',
-                    data: data // EL ID DEL NUEVO USUARIO
+                    data: data
                 });
             }
 
@@ -65,7 +65,7 @@ module.exports = {
 
     register(req, res) {
 
-        const user = req.body; // CAPTURA LOS DATOS QUE ENVIA EL CLIENTE
+        const user = req.body;
         User.create(user, (err, data) => {
 
             if (err) {
@@ -79,7 +79,7 @@ module.exports = {
             return res.status(201).json({
                 success: true,
                 message: 'El registro se realizo correctamente',
-                data: data // EL ID DEL NUEVO USUARIO
+                data: data
             });
 
         });
