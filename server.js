@@ -10,7 +10,6 @@ const passport = require('passport');
 * IMPORTAR RUTAS
 */
 const usersRoutes = require('./routes/user.route');
-const typeFeeding = require('./routes/tipo_alimento_route');
 const feedingRegister = require('./routes/alimento.route');
 const waterRegister = require('./routes/agua.route');
 const hopeRegister = require('./routes/esperanza.route');
@@ -42,7 +41,6 @@ app.set('port', port);
 * IMPORTAR RUTAS
 */
 usersRoutes(app);
-typeFeeding(app);
 feedingRegister(app);
 waterRegister( app);
 hopeRegister( app);
@@ -52,7 +50,7 @@ sleepRegister( app);
 wake_upRegister( app);
 exerciseRegister( app);
 
-server.listen(3000,'192.168.1.101' || 'localhost', function(){
+server.listen(3000,'192.168.1.100' || 'localhost', function(){
     console.log('Aplicacion de Nodejs ' + port + ' Iniciada....');
 });
 
