@@ -50,8 +50,9 @@ sleepRegister( app);
 wake_upRegister( app);
 exerciseRegister( app);
 
-server.listen(3000,'192.168.1.100' || 'localhost', function(){
-    console.log('Aplicacion de Nodejs ' + port + ' Iniciada....');
+
+server.listen(port, function() {
+    console.log('Aplicación de Node.js iniciada en el puerto ' + port);
 });
 
 app.use((err, req, res, next) => {

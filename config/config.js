@@ -1,10 +1,10 @@
 const mysql = require('mysql');
 
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'db_app_vida_saludable'
+    host: 'mysql-vida-saludable.alwaysdata.net',
+    user: '366827_api',
+    password: 'Vida_saludable#uab',
+    database: 'vida-saludable_db'
 });
 
 db.connect(function(err) {
