@@ -18,6 +18,7 @@ const airRegister = require('./routes/aire.route');
 const sleepRegister = require('./routes/dormir.route');
 const wake_upRegister = require('./routes/despertar.route');
 const exerciseRegister = require('./routes/ejercicio.route');
+const proyectoRoutes = require('./routes/proyecto.route');
 
 const port = process.env.PORT || 3000;
 
@@ -49,7 +50,7 @@ airRegister( app);
 sleepRegister( app);
 wake_upRegister( app);
 exerciseRegister( app);
-
+proyectoRoutes( app);
 
 server.listen(port, function() {
     console.log('Aplicación de Node.js iniciada en el puerto ' + port);
@@ -63,7 +64,6 @@ app.use((err, req, res, next) => {
 app.get('/', (req, res) => {
     res.send('Ruta Raiz del Backend');
 });
-
 
 module.exports = {
     app: app,

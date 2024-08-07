@@ -19,7 +19,7 @@ module.exports = {
             if (err) {
                 return res.status(501).json({
                     success: false,
-                    message: 'Hubo un error al registrar al usuario',
+                    message: 'Hubo un error en la autenticacion',
                     error: err
                 });
             }
@@ -100,6 +100,24 @@ module.exports = {
                 success: true,
                 message: 'Usuarios obtenidos correctamente',
                 data: users
+            });
+        });
+    },
+
+    getAllRoles (req, res) {
+        User.findAllRoles((err, roles) => {
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: 'Hubo un error al obtener los Roles',
+                    error: err
+                });
+            }
+
+            return res.status(200).json({
+                success: true,
+                message: 'Roles obtenidos correctamente',
+                data: roles
             });
         });
     }

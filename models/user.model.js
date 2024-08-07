@@ -14,24 +14,23 @@ User.findById = (id, result) => {
         FROM
             users
         WHERE
-            id = ?
+            id = $1
     `;
 
     db.query(
         sql,
         [id],
-        (err, user) => {
-            if (err){
+        (err, res) => {
+            if (err) {
                 console.log('Error', err);
                 result(err, null);
-            }
-            else{
-                console.log('Usuario Obtenido: ', user[0]);
-                result(null,user[0]);
+            } else {
+                console.log('Usuario Obtenido: ', res.rows[0]);
+                result(null, res.rows[0]);
             }
         }
-    )
-}
+    );
+};
 
 User.findByEmail = (email, result) => {
     const sql = `
@@ -45,27 +44,26 @@ User.findByEmail = (email, result) => {
         FROM
             users
         WHERE
-            email = ?
+            email = $1
     `;
 
     db.query(
         sql,
         [email],
-        (err, user) => {
-            if (err){
+        (err, res) => {
+            if (err) {
                 console.log('Error', err);
                 result(err, null);
-            }
-            else{
-                console.log('Usuario Obtenido: ', user[0]);
-                result(null,user[0])
+            } else {
+                console.log('Usuario Obtenido: ', res.rows[0]);
+                result(null, res.rows[0]);
             }
         }
-    )
-}
+    );
+};
+
 
 User.create = async (user, result) => {
-
     const hash = await bcrypt.hash(user.password, 10);
 
     const sql = `
@@ -76,33 +74,32 @@ User.create = async (user, result) => {
                 last_name,
                 phone,
                 password,
+                role_id,
+                proyecto_id,
                 created_at
             )
-        VALUES(?, ?, ?, ?, ?, ?)
+        VALUES($1, $2, $3, $4, $5, $6, $7, $8)
+        RETURNING id
     `;
 
-    db.query (
-        sql,
-        [
+    try {
+        const res = await db.query(sql, [
             user.email,
             user.name,
             user.last_name,
             user.phone,
             hash,
+            user.role_id,
+            user.proyecto_id,
             new Date()
-        ],
-        (err, res) => {
-            if (err){
-                console.log('Error', err);
-                result(err, null);
-            }
-            else{
-                console.log('Id del nuevo usuario: ', res.insertId);
-                result(null,res.insertId)
-            }
-        }
-    )
-}
+        ]);
+        console.log('Id del nuevo usuario: ', res.rows[0].id);
+        result(null, res.rows[0].id);
+    } catch (err) {
+        console.log('Error', err);
+        result(err, null);
+    }
+};
 
 User.findAll = (result) => {
     const sql = `
@@ -118,16 +115,38 @@ User.findAll = (result) => {
 
     db.query(
         sql,
-        (err, users) => {
-            if (err){
+        (err, res) => {
+            if (err) {
                 console.log('Error', err);
                 result(err, null);
-            }
-            else{
-                console.log('Usuarios obtenidos: ', users);
-                result(null, users);
+            } else {
+                console.log('Usuarios obtenidos: ', res.rows);
+                result(null, res.rows);
             }
         }
     );
-}
+};
+
+User.findAllRoles = (result) => {
+    const sql = `
+        SELECT
+            id,
+            name
+        FROM
+            roles
+    `;
+
+    db.query(
+        sql,
+        (err, res) => {
+            if (err) {
+                console.log('Error', err);
+                result(err, null);
+            } else {
+                console.log('Roles obtenidos: ', res.rows);
+                result(null, res.rows);
+            }
+        }
+    );
+};
 module.exports = User;

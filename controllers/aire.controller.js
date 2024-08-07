@@ -5,7 +5,7 @@ module.exports = {
   registrarAire (req, res)  {
     const { fecha, tiempo, user_id } = req.body;
   
-    RegistroAire.create(fecha, tiempo, user_id, (err, registroId) => {
+    Aire.create(fecha, tiempo, user_id, (err, registroId) => {
       if (err) {
         return res.status(500).json({ error: 'Error interno del servidor' });
       }

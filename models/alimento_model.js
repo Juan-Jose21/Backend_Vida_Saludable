@@ -9,17 +9,19 @@ Alimentacion.create = (datosAlimentacion, callback) => {
     return callback('Todos los campos son requeridos', null);
   }
 
-  db.query(
-    'INSERT INTO alimentacion (fecha, hora, tipo_alimento, saludable, user_id) VALUES (?, ?, ?, ?, ?)',
-    [fecha, hora, tipo_alimento, saludable, user_id],
-    (err, result) => {
-      if (err) {
-        console.error('Error al insertar registro de alimentación:', err);
-        return callback('Error al insertar registro de alimentación', null);
-      }
-      return callback(null, result.insertId);
+  const sql = `
+    INSERT INTO alimentacion (fecha, hora, tipo_alimento, saludable, user_id)
+    VALUES ($1, $2, $3, $4, $5)
+    RETURNING id
+  `;
+
+  db.query(sql, [fecha, hora, tipo_alimento, saludable, user_id], (err, res) => {
+    if (err) {
+      console.error('Error al insertar registro de alimentación:', err);
+      return callback('Error al insertar registro de alimentación', null);
     }
-  );
+    return callback(null, res.rows[0].id);
+  });
 };
 
 Alimentacion.mostrarEstadisticas = (user_id, callback) => {
@@ -31,17 +33,23 @@ Alimentacion.mostrarEstadisticas = (user_id, callback) => {
     FROM 
       alimentacion
     WHERE 
-      user_id = ?;
+      user_id = $1;
   `;
 
   db.query(sql, [user_id], (err, data) => {
     if (err) {
       callback(err, null);
     } else {
-      callback(null, data);
+      const result = data.rows.map(row => ({
+        total_alimentos: parseInt(row.total_alimentos, 10),
+        si_saludables: parseFloat(row.si_saludables),
+        no_saludables: parseFloat(row.no_saludables)
+      }));
+      callback(null, result);
     }
   });
 };
+
 
 Alimentacion.mostrarEstadisticasTipo = (user_id, tipo_alimento, callback) => {
   const sql = `
@@ -52,18 +60,24 @@ Alimentacion.mostrarEstadisticasTipo = (user_id, tipo_alimento, callback) => {
     FROM 
       alimentacion
     WHERE 
-      user_id = ? AND
-      tipo_alimento = ?;
+      user_id = $1 AND
+      tipo_alimento = $2;
   `;
 
   db.query(sql, [user_id, tipo_alimento], (err, data) => {
     if (err) {
       callback(err, null);
     } else {
-      callback(null, data);
+      const result = data.rows.map(row => ({
+        total_alimentos: parseInt(row.total_alimentos, 10),
+        si_saludables: parseFloat(row.si_saludables),
+        no_saludables: parseFloat(row.no_saludables)
+      }));
+      callback(null, result);
     }
   });
 };
+
 
 
 module.exports = Alimentacion;

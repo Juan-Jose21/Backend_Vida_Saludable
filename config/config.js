@@ -1,15 +1,21 @@
-const mysql = require('mysql');
+const { Pool } = require('pg');
 
-const db = mysql.createConnection({
-    host: 'mysql-vida-saludable.alwaysdata.net',
-    user: '366827_api',
-    password: 'Vida_saludable#uab',
-    database: 'vida-saludable_db'
+// Configura los parámetros de conexión
+const pool = new Pool({
+    user: 'postgres',
+    host: 'localhost',
+    database: 'app_vida_saludable',
+    password: 'Juanjose8923510',
+    port: 5433, // puerto por defecto de PostgreSQL
 });
 
-db.connect(function(err) {
-    if (err) throw err;
+// Conectar y manejar errores
+pool.connect((err, client, release) => {
+    if (err) {
+        return console.error('Error acquiring client', err.stack);
+    }
     console.log('BASE DE DATOS CONECTADO');
+    release();
 });
 
-module.exports = db;
+module.exports = pool;
