@@ -2,11 +2,14 @@ const { Pool } = require('pg');
 
 // Configura los parámetros de conexión
 const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'app_vida_saludable',
-    password: 'Juanjose8923510',
-    port: 5433, // puerto por defecto de PostgreSQL
+    user: 'vida_saludable',
+    host: 'dpg-cqpotarqf0us73an991g-a.oregon-postgres.render.com',
+    database: 'db_vida_saludable',
+    password: 'GC1lIz9tWF0Vudz99z05DNMPh0IdNrFL',
+    port: 5432, // puerto por defecto de PostgreSQL
+    ssl: {
+        rejectUnauthorized: false // Establecer en false si estás en un entorno de desarrollo; para producción, es mejor usar un certificado válido
+    }
 });
 
 // Conectar y manejar errores
