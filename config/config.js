@@ -8,7 +8,7 @@ const pool = new Pool({
     password: 'GC1lIz9tWF0Vudz99z05DNMPh0IdNrFL',
     port: 5432, // puerto por defecto de PostgreSQL
     ssl: {
-        rejectUnauthorized: false // Establecer en false si estás en un entorno de desarrollo; para producción, es mejor usar un certificado válido
+        rejectUnauthorized: false
     }
 });
 

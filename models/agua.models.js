@@ -20,7 +20,7 @@ Agua.create = (fecha, hora, cantidad, user_id, callback) => {
 
 Agua.mostrarEstadisticasAgua = (user_id, callback) => {
   const sql = `
-    SELECT
+   SELECT
   DATE(fecha) AS fecha,
   CASE EXTRACT(DOW FROM fecha)
     WHEN 0 THEN 'Dom'
@@ -31,7 +31,7 @@ Agua.mostrarEstadisticasAgua = (user_id, callback) => {
     WHEN 5 THEN 'Vie'
     WHEN 6 THEN 'Sáb'
   END AS dia_semana,
-  SUM(cantidad) * 250 AS total_agua_ml
+  CAST(SUM(cantidad) * 250 AS INTEGER) AS total_agua_ml
 FROM 
   agua
 WHERE 
